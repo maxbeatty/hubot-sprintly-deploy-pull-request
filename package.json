@@ -1,0 +1,29 @@
+{
+  "name": "hubot-sprintly-deploy-pull-request",
+  "version": "0.0.0",
+  "description": "Search Pull Request descriptions to mark items as deployed in Sprint.ly",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "https://github.com/maxbeatty/hubot-sprintly-deploy-pull-request",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maxbeatty/hubot-sprintly-deploy-pull-request.git"
+  },
+  "keywords": [
+    "hubot",
+    "sprintly",
+    "github"
+  ],
+  "author": "Max Beatty",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/maxbeatty/hubot-sprintly-deploy-pull-request/issues"
+  },
+  "dependencies": {
+    "hubot": ">= 2.4.0",
+    "githubot": "~0.5.0"
+  }
+}
