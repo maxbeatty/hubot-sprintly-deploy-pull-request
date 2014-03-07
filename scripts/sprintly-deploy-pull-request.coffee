@@ -25,7 +25,7 @@ module.exports = (robot) ->
     if (repo = req.body.repo) is undefined
       return res.send 400, 'No repository specified in request. Cannot continue.'
 
-    if (productId = req.body.productId || HUBOT_SPRINTLY_PRODUCT_ID) is undefined
+    if (productId = req.body.productId || process.env.HUBOT_SPRINTLY_PRODUCT_ID) is undefined
       return res.send 400, 'No product id defined. Cannot continue.'
 
     if (owner = req.body.owner || process.env.HUBOT_GITHUB_USER) is undefined
