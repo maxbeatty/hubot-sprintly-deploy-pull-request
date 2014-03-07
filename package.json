@@ -1,6 +1,6 @@
 {
   "name": "hubot-sprintly-deploy-pull-request",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Search Pull Request descriptions to mark items as deployed in Sprint.ly",
   "main": "index.coffee",
   "scripts": {
