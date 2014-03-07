@@ -10,11 +10,28 @@
 #   HUBOT_SPRINTLY_TOKEN - (optional) Sprint.ly authentication token <email:api_key>
 #   HUBOT_SPRINTLY_PRODUCT_ID - (optional) Sprint.ly product id
 #
+# Commands:
+#  None
+#
+# Notes:
+#  See README.md
+#
 # Author:
 #   maxbeatty
+#
+# Examples:
+#  See README.md
+#
+# Tags:
+#  sprintly, github
+#
+# Urls:
+#  https://github.com/maxbeatty/hubot-sprintly-deploy-pull-request
+
 
 module.exports = (robot) ->
   github = require('githubot')(robot)
+  qs = require 'querystring'
 
   robot.router.post '/hubot/sprintly-deploy-pull-request', (req, res) ->
     pullRequestNumbers = req.body.numbers.split ','
@@ -39,24 +56,32 @@ module.exports = (robot) ->
     regex = /(close|closes|closed|fix|fixed|fixes) (issue:|ticket:|bug:|item:|#)([0-9]+)/ig
 
     for number in pullRequestNumbers
-      github.get "#{owner}/#{repo}/pulls/#{number}", (pr) ->
+      github.get "/repos/#{owner}/#{repo}/pulls/#{number}", (pr) ->
         itemNumbers = []
         # search body for references to items
         while (match = regex.exec(pr.body)) isnt null
           itemNumbers.push match[3] # ["fixes item:123", "fixes", "item:", "123"]
 
-        robot.http("https://sprint.ly/api/products/#{productId}/deploys.json")
-          .header('authorization', "Basic #{new Buffer(auth).toString('base64')}")
-          .post({environment: env, numbers: itemNumbers.join(',') }) (err, sres, body) ->
-            if err
-              res.send 400, err
-            else if sres.statusCode isnt 200
-              res.send 400, body
-            else
-              robot.emit 'sdpr:done'
+        if itemNumbers.length > 0
+          data = qs.stringify
+            environment: env
+            numbers: itemNumbers.join(',')
+
+          robot.http("https://sprint.ly/api/products/#{productId}/deploys.json")
+            .header('authorization', "Basic #{new Buffer(auth).toString('base64')}")
+            .post(data) (err, sres, body) ->
+              if err
+                res.send 400, err
+              else if sres.statusCode isnt 200
+                res.send 400, body
+              else
+                robot.emit 'sdpr:done'
+        else
+          robot.emit 'sdpr:done'
 
     github.handleErrors (response) ->
       # errors will already be logged by githubot
+      # TODO: handle rate limiting
       robot.emit 'sdpr:done'
 
     robot.on 'sdpr:done', ->
